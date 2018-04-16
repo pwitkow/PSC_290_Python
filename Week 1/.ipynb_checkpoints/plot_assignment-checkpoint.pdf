@@ -1,0 +1,212 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "import pandas as pd\n",
+    "import seaborn as sbn\n",
+    "import os"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "C:/Users/Phil/Box Sync/Boorman Lab/Experiments/Latent-Learning/Behavioral Data\\Run 7\n"
+     ]
+    }
+   ],
+   "source": [
+    "#declare base directories and subfolder\n",
+    "base='C:/Users/Phil/Box Sync/Boorman Lab/Experiments/Latent-Learning/Behavioral Data'\n",
+    "run=7\n",
+    "data_dir=os.path.join(base, 'Run '+str(run))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 32,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "True\n"
+     ]
+    }
+   ],
+   "source": [
+    "#load all csvs into a list of dataframe for easy concatornation\n",
+    "dats=[pd.read_csv(os.path.join(data_dir, k)) for k in os.listdir(data_dir) if 'LTR_Task.csv' in k]\n",
+    "daters=pd.concat(dats)\n",
+    "\n",
+    "#check to ensure all elements are in contonated df\n",
+    "print(daters.size == np.sum([l.size for l in dats]))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 64,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "image/png": "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\n",
+      "text/plain": [
+       "<Figure size 432x288 with 1 Axes>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "#bin magitute difference scores so we can average RT\n",
+    "daters['magDiff']=np.abs(daters['O1_reward']-daters['O2_reward'])\n",
+    "\n",
+    "#histogram to look at the distributions and ensure we apply appropriate cutting \n",
+    "daters['magDiff'].hist()\n",
+    "\n",
+    "bins=np.arange(0,1.2, .2)\n",
+    "bin_labels=np.arange(1, len(bins))\n",
+    "\n",
+    "daters['magDiffBins']=pd.qcut(daters['magDiff'], bins, labels=bin_labels)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 74,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "       PAR magDiffBins  Res_time\n",
+      "0     FB69           1  1.180503\n",
+      "1     FB69           2  1.259139\n",
+      "2     FB69           3  1.299196\n",
+      "3     FB69           4  1.244212\n",
+      "4     FB69           5  1.257325\n",
+      "5     FH62           1  0.642173\n",
+      "6     FH62           2  0.675007\n",
+      "7     FH62           3  0.738893\n",
+      "8     FH62           4  0.661080\n",
+      "9     FH62           5  0.696025\n",
+      "10    GA70           1  1.714180\n",
+      "11    GA70           2  1.485957\n",
+      "12    GA70           3  1.461152\n",
+      "13    GA70           4  1.578318\n",
+      "14    GA70           5  1.586304\n",
+      "15    HR64           1  0.925837\n",
+      "16    HR64           2  0.628306\n",
+      "17    HR64           3  0.942201\n",
+      "18    HR64           4  0.876067\n",
+      "19    HR64           5  0.616947\n",
+      "20    JA63           1  1.693466\n",
+      "21    JA63           2  1.502679\n",
+      "22    JA63           3  1.602142\n",
+      "23    JA63           4  1.487773\n",
+      "24    JA63           5  1.568811\n",
+      "25    JM74           1  0.723175\n",
+      "26    JM74           2  0.678611\n",
+      "27    JM74           3  0.844530\n",
+      "28    JM74           4  0.587581\n",
+      "29    JM74           5  0.760484\n",
+      "..     ...         ...       ...\n",
+      "260  ll158           1  1.561976\n",
+      "261  ll158           2  1.352486\n",
+      "262  ll158           3  1.421859\n",
+      "263  ll158           4  1.422074\n",
+      "264  ll158           5  1.456415\n",
+      "265  ll159           1  1.713391\n",
+      "266  ll159           2  1.798949\n",
+      "267  ll159           3  1.706480\n",
+      "268  ll159           4  1.850253\n",
+      "269  ll159           5  1.946553\n",
+      "270  ll160           1  2.068015\n",
+      "271  ll160           2  2.245397\n",
+      "272  ll160           3  2.030992\n",
+      "273  ll160           4  1.950780\n",
+      "274  ll160           5  2.132358\n",
+      "275  ll167           1  1.417125\n",
+      "276  ll167           2  1.354167\n",
+      "277  ll167           3  1.362651\n",
+      "278  ll167           4  1.360894\n",
+      "279  ll167           5  1.220401\n",
+      "280   ll83           1  1.235931\n",
+      "281   ll83           2  1.177956\n",
+      "282   ll83           3  1.096770\n",
+      "283   ll83           4  1.078477\n",
+      "284   ll83           5  1.257331\n",
+      "285   sk61           1  0.558115\n",
+      "286   sk61           2  0.570704\n",
+      "287   sk61           3  0.536313\n",
+      "288   sk61           4  0.473348\n",
+      "289   sk61           5  0.487092\n",
+      "\n",
+      "[290 rows x 3 columns]\n"
+     ]
+    }
+   ],
+   "source": [
+    "rt_means=daters.groupby(['PAR', 'magDiffBins'], as_index=False)['Res_time'].mean()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "NameError",
+     "evalue": "name 'sbn' is not defined",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+      "\u001b[1;32m<ipython-input-1-da4791176d80>\u001b[0m in \u001b[0;36m<module>\u001b[1;34m()\u001b[0m\n\u001b[0;32m      1\u001b[0m \u001b[1;31m# plot reaction as a function of Magnitude difference quantile\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[1;32m----> 2\u001b[1;33m g = sbn.lmplot(x=\"magDiffBins\", y=\"Res_time\",\n\u001b[0m\u001b[0;32m      3\u001b[0m                truncate=True, size=5, data=rt_means)\n\u001b[0;32m      4\u001b[0m \u001b[0mg\u001b[0m\u001b[1;33m.\u001b[0m\u001b[0mset_axis_labels\u001b[0m\u001b[1;33m(\u001b[0m\u001b[1;34m\"Difference in Magnitudes Quantile\"\u001b[0m\u001b[1;33m,\u001b[0m \u001b[1;34m\"Reaction Time\"\u001b[0m\u001b[1;33m)\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n",
+      "\u001b[1;31mNameError\u001b[0m: name 'sbn' is not defined"
+     ]
+    }
+   ],
+   "source": [
+    "# plot reaction as a function of Magnitude difference quantile\n",
+    "g = sbn.lmplot(x=\"magDiffBins\", y=\"Res_time\",\n",
+    "               truncate=True, size=5, data=rt_means)\n",
+    "g.set_axis_labels(\"Difference in Magnitudes Quantile\", \"Reaction Time\")\n"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.5"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
